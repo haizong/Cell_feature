@@ -10,45 +10,99 @@ MCAK2_R2 = load('cell_data_rps_20161219_R2_MCAK2.mat');
 Neg2_R3 = load('cell_data_rps_20161222_R3_Neg2.mat');
 MCAK2_R3 = load('cell_data_rps_20161222_R3_MCAK2.mat'); 
 
-%% Area
-% Pool area data of each cell from a single set together
+%%
+% Pool feature of each cell from a single set together
 all_data = {Neg2_R1, Neg2_R2, Neg2_R3, MCAK2_R1, MCAK2_R2, MCAK2_R3};
+% Parameters of interests
 Area = cell(1, length(all_data));
+Eccentricity = cell(1, length(all_data));
+Perimeter = cell(1, length(all_data));
+Solidity = cell(1, length(all_data));
+Aspect_Ratio = cell(1, length(all_data));
+ConvexArea = cell(1, length(all_data));
+Actin_aveIntensity = cell(1, length(all_data));
+Actin_intIntensity = cell(1, length(all_data));
+
 for i = 1:length(all_data);
     for j = 1:length(all_data{i}.cell_data_rps)
-        Area{i}= [Area{i}; [all_data{i}.cell_data_rps(j).actin_rps.Area]' *0.18^2];
+        Area{i} = [Area{i}; [all_data{i}.cell_data_rps(j).actin_rps.Area]' *0.18^2]; % pixel2->µm2
+        Eccentricity{i} = [Eccentricity{i}; [all_data{i}.cell_data_rps(j).actin_rps.Eccentricity]'];
+        Perimeter{i} = [Perimeter{i}; [all_data{i}.cell_data_rps(j).actin_rps.Perimeter]' *0.18]; % pixel->µm
+        Solidity{i} = [Solidity{i}; [all_data{i}.cell_data_rps(j).actin_rps.Solidity]'];
+        Aspect_Ratio{i} = [Aspect_Ratio{i}; [all_data{i}.cell_data_rps(j).actin_rps.MajorAxisLength]'...
+            ./[all_data{i}.cell_data_rps(j).actin_rps.MinorAxisLength]'];
+        ConvexArea{i} = [ConvexArea{i}; [all_data{i}.cell_data_rps(j).actin_rps.ConvexArea]' *0.18^2]; % pixel2->µm2
+        Actin_aveIntensity{i} = [Actin_aveIntensity{i}; [all_data{i}.cell_data_rps(j).actin_rps.AveDen_Red]'];
+        Actin_intIntensity{i} = [Actin_intIntensity{i}; [all_data{i}.cell_data_rps(j).actin_rps.IntDen_Red]'];
     end
 end;
 
-% Create notched box plots of Areas. Label each box with its corresponding name.
+%% Create notched box plots of Areas. Label each box with its corresponding name.
 Area_pooled = cell2mat(Area(:));
-Area_group_name = [ ones(1, length(cell2mat(Area(1)))), ones(1, length(cell2mat(Area(2))))*2, ...
+Eccentricity_pooled = cell2mat(Eccentricity(:));
+Perimeter_pooled = cell2mat(Perimeter(:));
+Solidity_pooled = cell2mat(Solidity(:));
+Aspect_Ratio_pooled = cell2mat(Aspect_Ratio(:));
+ConvexArea_pooled = cell2mat(Aspect_Ratio(:));
+Actin_aveIntensity_pooled = cell2mat(Actin_aveIntensity(:));
+Actin_intIntensity_pooled = cell2mat(Actin_intIntensity(:));
+
+Group_name = [ ones(1, length(cell2mat(Area(1)))), ones(1, length(cell2mat(Area(2))))*2, ...
     ones(1, length(cell2mat(Area(3))))*3, ones(1, length(cell2mat(Area(4))))*4, ...
     ones(1, length(cell2mat(Area(5))))*5, ones(1, length(cell2mat(Area(6))))*6 ]';
-figure
-boxplot(Area_pooled, Area_group_name, 'Notch','on',...
-    'Labels', {'Neg2_R1','Neg2_R2', 'Neg2_R3', 'MCAK2_R1', 'MCAK2_R2', 'MCAK2_R3'});
-ylabel ('Area (µm2)'); 
-title('Compare Area Data from Different Repeats'); 
-print_save_figure(gcf, 'Area', 'Processed');
 
-%% Eccentricity
+figure(1)
+set_print_page(gcf, 0); 
+subplot (2, 2, 1) % Area
+boxplot(Area_pooled, Group_name, 'Notch','on');
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Area (µm^{2})'); 
 
-Eccentricity = cell(1, length(all_data));
-for i = 1:length(all_data);
-    for j = 1:length(all_data{i}.cell_data_rps)
-        Eccentricity{i}= [Eccentricity{i}; [all_data{i}.cell_data_rps(j).actin_rps.Eccentricity]' *0.18^2];
-    end
-end;
+subplot (2, 2, 2) % Peremeter
+boxplot(Perimeter_pooled, Group_name, 'Notch','on');
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Perimeter'); 
 
-Eccentricity_pooled = cell2mat(Eccentricity(:));
-Eccentricity_group_name = [ ones(1, length(cell2mat(Eccentricity(1)))), ones(1, length(cell2mat(Eccentricity(2))))*2, ...
-    ones(1, length(cell2mat(Eccentricity(3))))*3, ones(1, length(cell2mat(Eccentricity(4))))*4, ...
-    ones(1, length(cell2mat(Eccentricity(5))))*5, ones(1, length(cell2mat(Eccentricity(6))))*6 ]';
-figure
-boxplot(Eccentricity_pooled, Eccentricity_group_name, 'Notch','on',...
-    'Labels', {'Neg2_R1','Neg2_R2', 'Neg2_R3', 'MCAK2_R1', 'MCAK2_R2', 'MCAK2_R3'});
-ylabel ('Eccentricity'); 
-title('Compare Eccentricity Data from Different Repeats'); 
-print_save_figure(gcf, 'Eccentricity', 'Processed');
+subplot (2, 2, 3) % Eccentricity
+boxplot(Eccentricity_pooled, Group_name, 'Notch','on');
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Eccentricity'); 
+
+subplot (2, 2, 4) % Solidity
+boxplot(Solidity_pooled, Group_name, 'Notch','on');
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+ylim([0.4 1]); 
+title ('Solidity'); 
+print_save_figure(gcf, 'Fig1.Area_perimeter_eccentricity_solidity', 'Processed');
 %%
+figure(2)
+set_print_page(gcf, 0); 
+subplot (2, 2, 1) % Aspect_Ratio
+boxplot(Aspect_Ratio_pooled, Group_name, 'notch', 'on'); 
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Aspect Ratio'); 
+
+subplot (2, 2, 2) % Convex Area
+boxplot(ConvexArea_pooled, Group_name, 'notch', 'on'); 
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Convex Area'); 
+
+subplot (2, 2, 3) % Actin_aveIntensity
+boxplot(Actin_aveIntensity_pooled, Group_name, 'notch', 'on'); 
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Average actin intensity (A.U.)'); 
+
+subplot (2, 2, 4) % Actin_intIntensity
+boxplot(Actin_intIntensity_pooled, Group_name, 'notch', 'on'); 
+xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+title ('Integrated actin intensity (A.U.)');
+
+print_save_figure(gcf, 'Fig2.AspectRatio_ConvexArea_ActinIntensity', 'Processed');
