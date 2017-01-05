@@ -5,7 +5,7 @@ function cell_data = cellSegment_featureExtraction(cell_data, dir_name, ...
 % features including 'Area', 'Centroid','BoundingBox', 'ConvexArea',
 % 'Eccentricity', 'MajorAxisLength', 'MinorAxisLength','Perimeter',
 % 'Solidity', intergrate and average intensity of the red channel (actin).
-
+% HZ    Jan, 2017, Bloomington   MATLAB 2016a
 if ~exist('size_scale','var') || isempty(size_scale);
     size_scale = 0.5;
 end;
