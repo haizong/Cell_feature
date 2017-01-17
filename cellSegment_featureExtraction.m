@@ -1,5 +1,5 @@
 function cell_data = cellSegment_featureExtraction(cell_data, dir_name, ...
-    size_threshold, int_threshold, size_scale, fontsize)
+   size_thresh_actin_low, int_thresh_actin, size_scale, fontsize)
 
 % This function segment cells based on actin fluorescence and extract
 % features including 'Area', 'Centroid','BoundingBox', 'ConvexArea',
@@ -15,22 +15,25 @@ end;
 
 for i = 1:length(cell_data)
     %% Segmentation
-    cell_data(i).Red_gray = mat2gray( cell_data(i).ori_img.TexasRed, [int_threshold 4095] ); % Range[0, i]
+    cell_data(i).Red_gray = mat2gray( cell_data(i).ori_img.TexasRed, [int_thresh_actin 4095] ); % Range[0, i]
     
     % Remove noise by adaptive filtering, using a small window (5x5 pixels).
     I = wiener2( cell_data(i).Red_gray, [5 5] );
     
     % Graythresh finds a global threshold using Otsu's method.
-    bw = im2bw( I, int_threshold/(2^16));
+    bw = im2bw( I, int_thresh_actin/(2^16));
     
     % Fill holes. Necessary when the cell have varying contrast within themselves.
     bw2 = imfill( bw,'holes' );
     
+    se = strel('line',11,90);
+    bw3 = imerode(bw2, se);
     % Morphological opening using a disc kernel
-    bw3 = imopen( bw2, strel('disk', 2) );
+    bw33 = imopen( bw3, strel('disk', 2) );
+    
     
     % Remove objects that are too small to be cells. Set size_threshold @ step1.
-    bw4 = bwareaopen( bw3, size_threshold );
+    bw4 = bwareaopen( bw33, size_thresh_actin_low );
     
     % Clear border
     bw5 = imclearborder( bw4 );
@@ -43,7 +46,7 @@ for i = 1:length(cell_data)
     imshow ( imresize( bw, size_scale ), [] );
     title( '[2] Binary image', 'fontsize', fontsize );
     subplot(2,2,3)
-    imshow ( imresize( bw3, size_scale ), [] );
+    imshow ( imresize( bw4, size_scale ), [] );
     title( {'[3] Fill holes'; '[4] Image opening'}, 'fontsize', fontsize );
     subplot(2,2,4)
     imshow ( imresize( bw5, size_scale ), [] );
@@ -75,6 +78,10 @@ for i = 1:length(cell_data)
         cell_data(i).actin_rps(k).IntDen_Red = sum( IntDen(L_matrix == k) );
         cell_data(i).actin_rps(k).AveDen_Red = ...
             cell_data(i).actin_rps(k).IntDen_Red/cell_data(i).actin_rps(k).Area;
+        
+        % FA in FITC channel
+        cell_data(i).FA(k).FA_mask = zeros(size(cell_data(i).ori_img.FITC));
+        cell_data(i).FA(k).FA_mask (mask) = cell_data(i).ori_img.FITC(mask);
         
         % Save the image under the BoundingBox under actin_rps.
         x(k) = round(cell_data(i).actin_rps(k).BoundingBox(1));
