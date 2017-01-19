@@ -14,14 +14,20 @@
 %% Initiate
 clc; clear;
 close all;
-dir_name = '20170109_R1. Neg2';
+tic
+% dir_name = '20170109_R1. Neg2';
+% dir_name = '20170109_R1. MCAK2'; 
+% dir_name = '20170109_R2. Neg2';
+% dir_name = '20170109_R2. MCAK2';
+% dir_name = '20170109_R3. Neg2';
+% dir_name = '20170109_R3. MCAK2';
 fontsize = 12;
 size_scale = 0.5; % Image is too. Convert to 1024 x 768 image to display.
-size_thresh_actin_low = 40000;
-size_thresh_actin_up = 350000;
+size_thresh_actin_low = 30000;
+size_thresh_actin_up = 500000;
 int_thresh_actin = 300;
-int_thresh_FA = 300;
-size_thresh_FA_low = 30;
+int_thresh_FA = 200;
+size_thresh_FA_low = 20;
 %% Read images
 cell_data = read_folder(dir_name);
 
@@ -29,72 +35,16 @@ cell_data = read_folder(dir_name);
 cell_data = cellSegment_featureExtraction_FA(cell_data, dir_name, ...
     size_thresh_actin_low,size_thresh_actin_up, int_thresh_actin);
 
-%% Manually delete the cells that cannot be segmented (neighboring cells)
-for i =1
-    for k = 1
-        img = imgaussfilt(cell_data(i).FA(k).FA_mask);
-        % Perform the top-hat filtering and display the image.
-        se = strel('disk',12);
-        tophatFiltered = imtophat(img,se);
-        bw =  tophatFiltered >int_thresh_FA;
-        bw2 = bwareaopen( bw, 30 );
-        figure()
-        subplot (3,2,1)
-        imshow(bw2)
-        title ('bwareopen 10');
-        
-        % Apply Watershed algorithm to divide grouped FAs to distinct FA.
-        D = -bwdist(~bw);
-        subplot (3,2,2)
-        imshow(D,[],'InitialMagnification','fit');
-        title('Distance transform of ~bw');
-        
-        % Compute the watershed transform and display the resulting label matrix as an RGB image.
-        
-        Ld = watershed(D);
-        rgb = label2rgb(L,'jet',[.5 .5 .5]);
-        subplot (3,2,3)
-        imshow(rgb,'InitialMagnification','fit')
-        title('Watershed transform of D')
-        
-        % The watershed ridge lines, in white, correspond to Ld == 0. 
-        % Let's use these ridge lines to segment the binary image by changing 
-        % the corresponding pixels into background.
-        bw2(Ld == 0) = 0;
-        subplot (3,2,4)
-        imshow(bw2)
-        title('Watershed transform of D');
-        
-        mask = imextendedmin(D,50);
-        imshowpair(bw,mask,'blend')
-        D2 = imimposemin(D,mask);
-        Ld2 = watershed(D2);
-        bw3 = bw2;
-        bw3(Ld2 == 0) = 0;
-        figure()
-        imshow(bw3)
-        
-        % Count the number of discovered cells.
-        [L_matrix, num] = bwlabel(L);  % this num is off by +1
-        
-        % Let's overlay the detected cells over the original grayscale image to
-        % visually evaluate the performance of the algorithm
-        mask = im2bw(L_matrix, 1);
-        % Objects on the borders can be caused by noise and other artifacts.
-        
-        overlay3 = imoverlay(cell_data(i).FA.FA_mask, mask , [1 .3 .3]);
-        rps = regionprops( mask, 'Area', 'centroid', 'Eccentricity');
-        num = length (rps);
-        
-        % figure()
-        %         subplot(2,2,1);
-        %         imshow(img, []);
-        %         subplot(2,2,2);
-        %         imshow(tophatFiltered, []);
-        %         subplot(2,2,3);
-        %         imshow(bw1, []);
-        %         subplot(2,2,4);
-        %         imshow(overlay3, []);
-        
-    end
-end
+%%
+cell_data = focalAdhesionIdentify (cell_data, dir_name, int_thresh_FA, ...
+    size_thresh_FA_low, size_scale); 
+
+%% Manually remove joint cells
+% '20170109_R1. Neg2' #5, #20 cells too close to be separated. 
+%% Remove unwanted fields and Save. Too big to save all info. 
+fields = {'ori_img', 'Red_gray', 'labeledImage', 'actin_rps'};
+cell_data_rps = rmfield( cell_data, fields);  
+save( ['FA_rps_', dir_name([1:11,14:end])],... % rm space in filename
+    'cell_data_rps', 'dir_name', 'size_thresh_actin_low', 'size_thresh_actin_up',...
+    'size_thresh_FA_low'); 
+toc
