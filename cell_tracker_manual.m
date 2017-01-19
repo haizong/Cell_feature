@@ -2,6 +2,7 @@
 % HZ Jan 2017 Bloomington MATLAB R2016a
 
 % Go to each folder containing image sequences 
+clc; clear; 
 folder_info = dir('*.tif');
 folder_info = folder_info(arrayfun(@(x) x.name(1), folder_info) ~= '.');
 
