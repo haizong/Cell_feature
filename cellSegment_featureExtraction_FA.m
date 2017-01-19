@@ -26,7 +26,7 @@ for i = 1:length(cell_data)
     % Fill holes. Necessary when the cell have varying contrast within themselves.
     bw2 = imfill( bw,'holes' );
     
-    se = strel('line',11,90);
+    se = strel('line',20,90);
     bw3 = imerode(bw2, se);
     
     % Morphological opening using a disc kernel
@@ -39,23 +39,23 @@ for i = 1:length(cell_data)
     % Clear border
     bw5 = imclearborder( bw4 );
     
-%     figure ()
-%     subplot(2,2,1)
-%     imshow ( imresize( I, size_scale ), [] );
-%     title( '[1] Adaptive filtering', 'fontsize', fontsize );
-%     subplot(2,2,2)
-%     imshow ( imresize( bw, size_scale ), [] );
-%     title( '[2] Binary image', 'fontsize', fontsize );
-%     subplot(2,2,3)
-%     imshow ( imresize( bw4, size_scale ), [] );
-%     title( {'[3] Fill holes'; '[4] Image opening'}, 'fontsize', fontsize );
-%     subplot(2,2,4)
-%     imshow ( imresize( bw5, size_scale ), [] );
-%     title( '[5] Clear border', 'fontsize', fontsize );
-%     
-%     print_save_figure( gcf, [cell_data(i).name, '_Fig1_Segment' ],...
-%         [dir_name, '/Processed'] );
-%     
+    figure ()
+    subplot(2,2,1)
+    imshow ( imresize( I, size_scale ), [] );
+    title( '[1] Adaptive filtering', 'fontsize', fontsize );
+    subplot(2,2,2)
+    imshow ( imresize( bw, size_scale ), [] );
+    title( '[2] Binary image', 'fontsize', fontsize );
+    subplot(2,2,3)
+    imshow ( imresize( bw4, size_scale ), [] );
+    title( {'[3] Fill holes'; '[4] Image opening'}, 'fontsize', fontsize );
+    subplot(2,2,4)
+    imshow ( imresize( bw5, size_scale ), [] );
+    title( '[5] Clear border', 'fontsize', fontsize );
+    
+    print_save_figure( gcf, [cell_data(i).name, '_Fig1_Segment' ],...
+        [dir_name, '/Processed'] );
+    
     % Label objects
     cell_data(i).labeledImage = label2rgb (bw5);
     
