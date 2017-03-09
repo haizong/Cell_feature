@@ -31,15 +31,16 @@ for i =1:length(cell_data)
             cell_data(i).FA(k).rps = regionprops( mask, 'Area', 'centroid', 'Eccentricity');
             cell_data(i).FA(k).num = length (cell_data(i).FA(k).rps );
             
-%             for j = 1:raw_num
-%                 % Calculate intergrate and average intensity of actin area.
-%                 IntDen = zeros (size (cell_data(i).FA(k).FA_mask) );
-%                 IntDen(mask) = cell_data(i).FA(k).FA_mask(mask);
-%                 cell_data(i).FA(k).IntDen_Red = sum( IntDen(L_matrix == j) );
-%                 cell_data(i).FA(k).AveDen_Red = ...
-%                     cell_data(i).FA(k).IntDen_Red/cell_data(i).FA(k).rps(j).Area;
-%             end 
-%             
+            for j = 1:(raw_num-1)  % the number is off by +1
+                % Calculate average intensity for each FA.
+                IntDen = zeros (size (cell_data(i).FA(k).FA_mask) );
+                IntDen(mask) = cell_data(i).FA(k).FA_mask(mask);
+                cell_data(i).FA(k).rps(j).IntDen = sum( IntDen(L_matrix == j+1));
+                cell_data(i).FA(k).rps(j).AveDen = ...
+                    cell_data(i).FA(k).rps(j).IntDen/cell_data(i).FA(k).rps(j).Area;
+            end 
+            cell_data(i).FA(k).IntDen_cell = sum([cell_data(i).FA(k).rps(:).IntDen]');
+            
             figure()
             subplot (3, 2, 1)
             imshow(imresize(cell_data(i).FA(k).FA_mask, size_scale), []); 

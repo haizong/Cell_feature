@@ -13,10 +13,14 @@ Neg2_R2 = load('cell_data_rps_20161219_R2_Neg2.mat');
 MCAK2_R2 = load('cell_data_rps_20161219_R2_MCAK2.mat');
 Neg2_R3 = load('cell_data_rps_20161222_R3_Neg2.mat');
 MCAK2_R3 = load('cell_data_rps_20161222_R3_MCAK2.mat');
+Neg2_R4 = load('cell_data_rps_20170225_R4_Neg2.mat');
+MCAK2_R4 = load('cell_data_rps_20170225_R4_MCAK2.mat');
+MCAK20_R4 = load('cell_data_rps_20170225_R4_MCAK20.mat');
 
 %%
 % Pool feature of each cell from a single set together
-all_data = {Neg2_R1, Neg2_R2, Neg2_R3, MCAK2_R1, MCAK2_R2, MCAK2_R3};
+all_data = {Neg2_R1, Neg2_R2, Neg2_R3, Neg2_R4, MCAK2_R1, MCAK2_R2, MCAK2_R3,...
+     MCAK2_R4, MCAK20_R4};
 % Parameters of interests
 Area = cell(1, length(all_data));
 Eccentricity = cell(1, length(all_data));
@@ -53,63 +57,65 @@ Actin_intIntensity_pooled = cell2mat(Actin_intIntensity(:));
 
 Group_name = [ ones(1, length(cell2mat(Area(1)))), ones(1, length(cell2mat(Area(2))))*2, ...
     ones(1, length(cell2mat(Area(3))))*3, ones(1, length(cell2mat(Area(4))))*4, ...
-    ones(1, length(cell2mat(Area(5))))*5, ones(1, length(cell2mat(Area(6))))*6 ]';
+    ones(1, length(cell2mat(Area(5))))*5, ones(1, length(cell2mat(Area(6))))*6, ...
+    ones(1, length(cell2mat(Area(7))))*7, ones(1, length(cell2mat(Area(8))))*8, ...
+    ones(1, length(cell2mat(Area(9))))*9]';
 
 figure(1)
 set_print_page(gcf, 0);
 subplot (2, 2, 1) % Area
 boxplot(Area_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Area (µm^{2})');
 
 subplot (2, 2, 2) % Peremeter
 boxplot(Perimeter_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Perimeter');
 
 subplot (2, 2, 3) % Eccentricity
 boxplot(Eccentricity_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Eccentricity');
 
 subplot (2, 2, 4) % Solidity
 boxplot(Solidity_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 ylim([0.4 1]);
 title ('Solidity');
-print_save_figure(gcf, 'Fig1.Area_perimeter_eccentricity_solidity', 'Processed');
+print_save_figure(gcf, 'Fig1.ALL_Area_perimeter_eccentricity_solidity', 'Processed');
 %%
 figure(2)
 set_print_page(gcf, 0);
 subplot (2, 2, 1) % Aspect_Ratio
 boxplot(Aspect_Ratio_pooled, Group_name, 'notch', 'on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Aspect Ratio');
 
 subplot (2, 2, 2) % Convex Area
 boxplot(ConvexArea_pooled, Group_name, 'notch', 'on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Convex Area');
 
 subplot (2, 2, 3) % Actin_aveIntensity
 boxplot(Actin_aveIntensity_pooled, Group_name, 'notch', 'on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Average actin intensity (A.U.)');
 
 subplot (2, 2, 4) % Actin_intIntensity
 boxplot(Actin_intIntensity_pooled, Group_name, 'notch', 'on');
-xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'},...
-    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:9),45,{{'Neg2_1'},{'Neg2_2'}, {'Neg2_3'}, {'Neg2_4'},...
+    {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}, {'MCAK2_4'}, {'MCAK20'}}, 'Interpreter', 'none');
 title ('Integrated actin intensity (A.U.)');
 
-print_save_figure(gcf, 'Fig2.AspectRatio_ConvexArea_ActinIntensity', 'Processed');
+print_save_figure(gcf, 'Fig2.ALL_AspectRatio_ConvexArea_ActinIntensity', 'Processed');
 
 %% Descriptive statistics
 Area = descriptive_stats (Area);

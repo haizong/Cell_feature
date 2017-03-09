@@ -23,22 +23,44 @@ figure(1)
 set_print_page(gcf, 1);
 subplot (2, 3, 1) 
 boxplot(Area_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Neg2'},{'MCAK2'}}, 'Interpreter', 'none')
+h=findobj(gca,'tag','Outliers');
+delete(h);
+ylim([0, 5000]);
+xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
 title ('Area (µm^{2})');
 
 subplot (2, 3, 2) 
 boxplot(Eccentricity_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Neg2'},{'MCAK2'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
+h=findobj(gca,'tag','Outliers');
+delete(h);
+ylim([0, 1.2]);
 title ('Eccentricity');
 
 subplot (2, 3, 3) 
 boxplot(Aspect_Ratio_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Neg2'},{'MCAK2'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
+h=findobj(gca,'tag','Outliers');
+delete(h);
+ylim([0, 8]);
 title ('Aspect Ratio');
 
 subplot (2, 3, 4) 
 boxplot(Solidity_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Neg2'},{'MCAK2'}}, 'Interpreter', 'none')
+xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
+h=findobj(gca,'tag','Outliers');
+delete(h);
+ylim([0.6, 1]);
 title ('Solidity');
 %%
 print_save_figure(gcf, 'Fig3.Area_Eccentricity_AspectRatio_Solidity_Pooled', 'Processed');
+
+%% 
+stats_Area = mwwtest( Area_Neg2, Area_MCAK2 ); 
+stats_Eccentricity = mwwtest( Eccentricity_Neg2, Eccentricity_MCAK2 ); 
+stats_Aspect_Ratio = mwwtest( Aspect_Ratio_Neg2, Aspect_Ratio_MCAK2 ); 
+stats_Solidity = mwwtest( Solidity_Neg2, Solidity_MCAK2 ); 
+
+
+
+mwwtest( Area_Neg2, Area_MCAK2 );
