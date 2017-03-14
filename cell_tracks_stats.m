@@ -23,7 +23,7 @@ for i = 1:length(Neg2_crd_pooled)
             Neg2_crd_pooled{i}(j+1, 1), Neg2_crd_pooled{i}(j+1, 2)]);
         Neg2_vel_all(j, 1) = Neg2_dist_all(j, 1)/dt;
         Neg2_crd_pooled{i,3} = Neg2_dist_all;  % distance traveled in each time frame
-        Neg2_crd_pooled{i,4} = Neg2_vel_all;  % velocity in each time frame, unit pixel/min
+        Neg2_crd_pooled{i,4} = Neg2_vel_all*60;  % velocity unit convert to pixel/hr
         Neg2_crd_pooled{i,5} = mean(Neg2_crd_pooled{i,4}); % average velocity
         Neg2_crd_pooled{i,6} = sum(Neg2_crd_pooled{i,3}); % path = sum of individual distance
         Neg2_crd_pooled{i,7} = Neg2_crd_pooled{i,2}/Neg2_crd_pooled{i,6};
@@ -46,7 +46,7 @@ for i = 1:length(MCAK2_crd_pooled)
         MCAK2_vel_all(j, 1) = MCAK2_dist_all(j, 1)/dt;
         
         MCAK2_crd_pooled{i,3} = MCAK2_dist_all;  % distance traveled in each time frame
-        MCAK2_crd_pooled{i,4} = MCAK2_vel_all;  % velocity, unit pixel/min
+        MCAK2_crd_pooled{i,4} = MCAK2_vel_all*60;  % velocity, unit convert to pixel/hr
         MCAK2_crd_pooled{i,5} = mean(MCAK2_crd_pooled{i,4}); % average_velocity
         MCAK2_crd_pooled{i,6} = sum(MCAK2_crd_pooled{i,3}); % sum of individual distance = path
         MCAK2_crd_pooled{i,7} = MCAK2_crd_pooled{i,2}/MCAK2_crd_pooled{i,6};
@@ -54,7 +54,7 @@ for i = 1:length(MCAK2_crd_pooled)
 end
 
 displacement_pooled = [Neg2_crd_pooled{:,2}, MCAK2_crd_pooled{:,2}];
-velocity_pooled = [Neg2_crd_pooled{:,5},  MCAK2_crd_pooled{:,5}]*60;  % --> convert to hrs
+velocity_pooled = [Neg2_crd_pooled{:,5},  MCAK2_crd_pooled{:,5}];  % hr
 path_pooled = [Neg2_crd_pooled{:,6},  MCAK2_crd_pooled{:,6}];
 directionality_pooled = [Neg2_crd_pooled{:,7},  MCAK2_crd_pooled{:,7}];
 
