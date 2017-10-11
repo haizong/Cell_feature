@@ -21,47 +21,45 @@ Group_name = [ ones(length(Area_Neg2), 1); ones(length(Area_MCAK2), 1)*2];
 
 figure()
 set_print_page; 
-subplot (2, 3, 1) 
-boxplot(Area_pooled, Group_name, 'Notch','on');
-% h=findobj(gca,'tag','Outliers');
-% delete(h);
-ylim([0, 5000]);
-xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
+fig1 = subplot (2, 3, 1); 
+boxplot(Area_pooled, Group_name, 'Notch','on', 'Symbol', 'k.', 'OutlierSize', 4);
+xticklabel_rotate((1:2),45,{{'Control'},{'MCAK KD'}}, 'Interpreter', 'none')
+ylim([0, 6000]);
+box(fig1,'off');
 ylabel ('Area (µm^{2})');
 
-subplot (2, 3, 2) 
-boxplot(Eccentricity_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
-% h=findobj(gca,'tag','Outliers');
-% delete(h);
-ylim([0, 1.2]);
+fig2 = subplot (2, 3, 2); 
+boxplot(Eccentricity_pooled, Group_name, 'Notch','on', 'Symbol', 'k.', 'OutlierSize', 4);
+xticklabel_rotate((1:2),45,{{'Control'},{'MCAK KD'}}, 'Interpreter', 'none')
+ylim([0, 1]);
+box(fig2,'off');
 ylabel('Eccentricity');
 
-subplot (2, 3, 3) 
-boxplot(Aspect_Ratio_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
-% h=findobj(gca,'tag','Outliers');
-% delete(h);
-ylim([0, 8]);
+fig3 = subplot (2, 3, 3); 
+boxplot(Aspect_Ratio_pooled, Group_name, 'Notch','on', 'Symbol', 'k.', 'OutlierSize', 4);
+xticklabel_rotate((1:2),45,{{'Control'},{'MCAK KD'}}, 'Interpreter', 'none')
+ylim([0, 10]);
+box(fig3,'off');
 ylabel ('Aspect Ratio');
 
-subplot (2, 3, 4) 
-boxplot(Solidity_pooled, Group_name, 'Notch','on');
-xticklabel_rotate((1:2),45,{{'Control siRNA'},{'MCAK siRNA'}}, 'Interpreter', 'none')
-% h=findobj(gca,'tag','Outliers');
-% delete(h);
-ylim([0.6, 1]);
+fig4 = subplot (2, 3, 4); 
+boxplot(Solidity_pooled, Group_name, 'Notch','on', 'Symbol', 'k.', 'OutlierSize', 4);
+xticklabel_rotate((1:2),45,{{'Control'},{'MCAK KD'}}, 'Interpreter', 'none')
+ylim([0.4, 1]);
+box(fig4,'off');
 ylabel ('Solidity');
 %%
 print_save_figure(gcf, 'Fig3.Area_Eccentricity_AspectRatio_Solidity_Pooled', 'Processed');
 
 %% 
+cprintf ('red', 'stats_Area\n'); 
 stats_Area = mwwtest( Area_Neg2, Area_MCAK2 ); 
-stats_Eccentricity = mwwtest( Eccentricity_Neg2, Eccentricity_MCAK2 ); 
+cprintf ('red', 'stats_Eccentricity\n'); 
+stats_Eccentricity = mwwtest( Eccentricity_Neg2, Eccentricity_MCAK2 );
+cprintf ('red', 'stats_Aspect_Ratio\n'); 
 stats_Aspect_Ratio = mwwtest( Aspect_Ratio_Neg2, Aspect_Ratio_MCAK2 ); 
+cprintf ('red', 'stats_Solidity\n'); 
 stats_Solidity = mwwtest( Solidity_Neg2, Solidity_MCAK2 ); 
-
-mwwtest( Area_Neg2, Area_MCAK2 );
 
 save ('MannWhitneyTest_stats', 'stats_Area', 'stats_Eccentricity', 'stats_Aspect_Ratio',...
     'stats_Solidity'); 
