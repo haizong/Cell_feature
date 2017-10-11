@@ -23,25 +23,28 @@ Group_name = [ ones(1, length(Neg2_Ka_R1)), ones(1, length(Neg2_Ka_R2))*2, ones(
 
 figure()
 set_print_page(gcf, 0);
-subplot (2, 3, 1) % Ka_individual
+fig1 = subplot (2, 3, 1); % Ka_individual
 boxplot(Ka_pooled, Group_name, 'notch', 'on', 'Symbol', 'k.', 'OutlierSize', 4);
 xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'},{'Neg2_3'}, ...
     {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}},'Interpreter', 'none', 'fontsize', fontsize);
+box(fig1,'off');
 ylim ([0 1.2]);
 ylabel ('Assembly rate constant (×10^-2 s^-1)', 'fontsize', fontsize);
 
-subplot (2, 3, 2) % Kd_individual
+fig2 = subplot (2, 3, 2); % Kd_individual
 boxplot(Kd_pooled, Group_name, 'notch', 'on', 'Symbol', 'k.', 'OutlierSize', 4);
 ylim ([0 0.6]);
 xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'},{'Neg2_3'}, ...
     {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}},'Interpreter', 'none', 'fontsize', fontsize);
+box(fig2,'off');
 ylabel ('Disassembly rate constant (×10^-2 s^-1)', 'fontsize', fontsize);
 
-subplot (2, 3, 3) % Lifetime_individual
+fig3 = subplot (2, 3, 3); % Lifetime_individual
 boxplot(lt_pooled, Group_name, 'notch', 'on', 'Symbol', 'k.', 'OutlierSize', 4);
 ylim ([0 120]);
 xticklabel_rotate((1:6),45,{{'Neg2_1'},{'Neg2_2'},{'Neg2_3'}, ...
     {'MCAK2_1'}, {'MCAK2_2'}, {'MCAK2_3'}},'Interpreter', 'none', 'fontsize', fontsize);
+box(fig3,'off');
 ylabel ('Lifetime (min)', 'fontsize', fontsize);
 
 %% Plot combined data set
@@ -56,22 +59,25 @@ lt_MCAK2 = [MCAK2_lt_R1; MCAK2_lt_R2; MCAK2_lt_R3];
 
 Group_N2_M2 = [ones(1, length(Ka_Neg2)), ones(1, length(Ka_MCAK2))*2];
 
-subplot (2, 3, 4) % Ka_combined
+fig4 = subplot (2, 3, 4); % Ka_combined
 boxplot(Ka_pooled, Group_N2_M2, 'notch', 'on', 'Symbol', 'k.', 'OutlierSize', 4);
 ylim ([0 1.2]);
 xticklabel_rotate((1:2),45,{{'Control'}, {'MCAK KD'}},'Interpreter', 'none', 'fontsize', fontsize);
+box(fig4,'off');
 ylabel ('Assembly rate constant (×10^-2 s^-1)', 'fontsize', fontsize);
 
-subplot (2, 3, 5) % Kd_combined
+fig5 = subplot (2, 3, 5); % Kd_combined
 boxplot(Kd_pooled, Group_N2_M2, 'notch', 'on', 'Symbol', 'k.', 'OutlierSize', 4);
 ylim ([0 0.6]);
 xticklabel_rotate((1:2),45,{{'Control'}, {'MCAK KD'}},'Interpreter', 'none', 'fontsize', fontsize);
+box(fig5,'off');
 ylabel ('Disassembly rate constant (×10^-2 s^-1)', 'fontsize', fontsize);
 
-subplot (2, 3, 6) % Lifetime_combined
+fig6= subplot (2, 3, 6); % Lifetime_combined
 boxplot(lt_pooled, Group_N2_M2, 'notch', 'on', 'Symbol', 'k.', 'OutlierSize', 4);
 ylim ([0 120]);
 xticklabel_rotate((1:2),45,{{'Control'}, {'MCAK KD'}},'Interpreter', 'none', 'fontsize', fontsize);
+box(fig6,'off');
 ylabel ('Lifetime (min)', 'fontsize', fontsize);
 
 %%
