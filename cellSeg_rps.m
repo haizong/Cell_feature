@@ -17,9 +17,9 @@
 %% Initiate
 clc; clear;
 close all;
-dir_name = '20170225_R4. MCAK20';
+dir_name = '20170918_Set2_MCAK2_GFP';
 fontsize = 12;
-size_scale = 0.5; % Image is too. Convert to 1024 x 768 image to display.
+size_scale = 0.5; % Image is too big. Convert to 1024 x 768 image to display.
 size_threshold = 5000;
 int_threshold = 220; 
 
