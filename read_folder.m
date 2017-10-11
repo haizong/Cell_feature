@@ -26,13 +26,13 @@ for i = 1:3:length(TIFF_list);
     im_input = read_TIFF(file_id);
     
     cell_data((i+2)/3).ori_img.DAPI = double(im_input(:,:,3)); % convert 16 bit to double
-    cell_data((i+2)/3).ori_img.TexasRed = double(im_input(:,:,2)); 
-    cell_data((i+2)/3).ori_img.FITC = double(im_input(:,:,1)); 
+    cell_data((i+2)/3).ori_img.TexasRed = double(im_input(:,:,1)); 
+    cell_data((i+2)/3).ori_img.FITC = double(im_input(:,:,2)); 
     
-    im_display = cat(3, imadjust(im_input(:,:,2), [0.0038, 0.0381]),... % TexasRed [250, 2500]
-        imadjust(im_input(:,:,1), [0.0038, 0.0061]),...% FITC [250, 400]
-        imadjust(im_input(:,:,3), [0.0038, 0.0305])); ... % DAPI [250, 2000]
-    
+%     im_display = cat(3, imadjust(im_input(:,:,2), [0.0038, 0.0381]),... % TexasRed [250, 2500]
+%         imadjust(im_input(:,:,1), [0.0038, 0.0061]),...% FITC [250, 400]
+%         imadjust(im_input(:,:,3), [0.0038, 0.0305])); ... % DAPI [250, 2000]
+%     
 %     figure()
 %     imshow(imresize(im_display, 0.5));
 %     print_save_figure(gcf, ['CC_', file_id], [dir_name, '/ColorCombine'])
